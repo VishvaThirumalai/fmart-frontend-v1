@@ -1,32 +1,51 @@
-// src/components/GroceryHome.js - Key fixes for Add to Cart functionality
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  Container, Navbar, Nav, Carousel, Card, Row, Col, Button, Form, InputGroup, Badge 
+  Container, Carousel, Card, Row, Col, Button, Form, Badge 
 } from 'react-bootstrap';
 import { 
-  FaSearch, FaShoppingCart, FaUser, FaStar, FaHeart, FaPhone, FaEnvelope, 
+  FaShoppingCart, FaStar, FaHeart, FaPhone, FaEnvelope, 
   FaMapMarkerAlt, FaFacebook, FaTwitter, FaInstagram, FaTruck, FaLeaf, 
-  FaCheckCircle, FaHeadset, FaCcVisa, FaCcMastercard, FaCcPaypal, FaCcApplePay,
-  FaArrowRight, FaFire, FaClock, FaShieldAlt
+  FaHeadset, FaCcVisa, FaCcMastercard, FaCcPaypal, FaCcApplePay,
+  FaArrowRight, FaClock, FaShieldAlt, FaBolt, FaGift, FaCrown, FaEye
 } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
+
+// Import local images
 import freshVegetablesBanner from '../assets/images/fresh-vegetables.jpg';
 import organicfruitesBanner from '../assets/images/organic-fru.jpg';
-import { products, deals } from '../data/products';
 import placeholder from '../assets/images/placeholder-category.jpg';
-import Marquee from 'react-fast-marquee';
+
 // Import category images
-import bakery from '../assets/images/categories/bakery.jpg';
-import dairyEgg from '../assets/images/categories/dairy_egg.webp';
-import beverages from '../assets/images/categories/beverages.png';
-import fishMeat from '../assets/images/categories/fish-meat.jpg';
-import fruitsVeggies from '../assets/images/categories/fruite_vege.png';
-import snacks from '../assets/images/categories/snacks.jpg';
+import bakery from '../assets/images/bakery.jpg';
+import dairyEgg from '../assets/images/dairy_egg.webp';
+import beverages from '../assets/images/beverages.png';
+import fishMeat from '../assets/images/fish-meat.jpg';
+import fruitsVeggies from '../assets/images/fruite_vege.png';
+import snacks from '../assets/images/snacks.jpg';
+
+// Import product images
+import freshApples from '../assets/images/products/fresh-apples.jpg';
+import organicMilk from '../assets/images/products/organic-milk.jpg';
+import largeEggs from '../assets/images/products/eggs-dozen.jpg';
+import wholeWheatBread from '../assets/images/products/whole-wheat-bread.jpg';
+import chickenBreast from '../assets/images/products/chicken-breast.jpg';
+import basmatiRice from '../assets/images/products/rice-cakes.jpg';
+import freshTomatoes from '../assets/images/products/organic-tomatoes.jpg';
+import potatoChips from '../assets/images/products/potato-chips.jpg';
+import avocado from '../assets/images/products/avocados.jpg';
+import greekYogurt from '../assets/images/products/greek-yogurt.jpg';
+import freshSalmon from '../assets/images/products/fresh-salmon.jpg';
+import orangeJuice from '../assets/images/products/orange-juice.jpg';
+import chocolateCookies from '../assets/images/products/chocolate-chip-cookies.jpg';
+import bananas from '../assets/images/products/bananas.jpg';
+import pasta from '../assets/images/products/pasta-pack.jpg';
+import cheeseBlock from '../assets/images/products/sharp-cheddar.jpg';
+
+
 import Header from '../Layout/Header';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-
-// Define parentCategories directly if not using categoryUtils
+import EnhancedNewsletter from '../components/EnhancedNewsletter';
 const parentCategories = [
   {
     name: "Bakery",
@@ -69,14 +88,267 @@ const parentCategories = [
 const GroceryHome = () => {
   const [wishlist, setWishlist] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [trendingProducts, setTrendingProducts] = useState([]);
+  const [specialOffers, setSpecialOffers] = useState([]);
   const navigate = useNavigate();
 
   const { user, isAuthenticated } = useAuth();
   const { addToCart, getTotalItems } = useCart();
 
+  // Initialize enhanced data with LOCAL images
+  useEffect(() => {
+    // Featured Products with LOCAL images
+    const enhancedFeatured = [
+      {
+        id: 1,
+        name: "Organic Apples",
+        price: 120,
+        oldPrice: 150,
+        rating: 4.5,
+        category: "Fruits",
+        image: freshApples,
+        tag: "BEST SELLER",
+        tagColor: "#dc3545",
+        deliveryTime: "15 min",
+        unit: "1 kg"
+      },
+      {
+        id: 2,
+        name: "Fresh Milk",
+        price: 60,
+        oldPrice: 70,
+        rating: 4.8,
+        category: "Dairy",
+        image: organicMilk,
+        tag: "POPULAR",
+        tagColor: "#198754",
+        deliveryTime: "20 min",
+        unit: "1 liter"
+      },
+      {
+        id: 3,
+        name: "Farm Eggs",
+        price: 80,
+        oldPrice: 90,
+        rating: 4.6,
+        category: "Dairy",
+        image: largeEggs,
+        tag: "FRESH",
+        tagColor: "#0dcaf0",
+        deliveryTime: "25 min",
+        unit: "12 pieces"
+      },
+      {
+        id: 4,
+        name: "Whole Wheat Bread",
+        price: 45,
+        oldPrice: 55,
+        rating: 4.3,
+        category: "Bakery",
+        image: wholeWheatBread,
+        tag: "HEALTHY",
+        tagColor: "#ffc107",
+        deliveryTime: "30 min",
+        unit: "1 loaf"
+      },
+      {
+        id: 5,
+        name: "Fresh Chicken",
+        price: 220,
+        oldPrice: 250,
+        rating: 4.7,
+        category: "Meat",
+        image: chickenBreast,
+        tag: "PREMIUM",
+        tagColor: "#6f42c1",
+        deliveryTime: "35 min",
+        unit: "1 kg"
+      },
+      {
+        id: 6,
+        name: "Basmati Rice",
+        price: 90,
+        oldPrice: 110,
+        rating: 4.4,
+        category: "Grains",
+        image: basmatiRice,
+        tag: "QUALITY",
+        tagColor: "#fd7e14",
+        deliveryTime: "20 min",
+        unit: "1 kg"
+      },
+      {
+        id: 7,
+        name: "Fresh Tomatoes",
+        price: 40,
+        oldPrice: 50,
+        rating: 4.2,
+        category: "Vegetables",
+        image: freshTomatoes,
+        tag: "ORGANIC",
+        tagColor: "#20c997",
+        deliveryTime: "15 min",
+        unit: "1 kg"
+      },
+      {
+        id: 8,
+        name: "Potato Chips",
+        price: 30,
+        oldPrice: 40,
+        rating: 4.1,
+        category: "Snacks",
+        image: potatoChips,
+        tag: "CRUNCHY",
+        tagColor: "#e83e8c",
+        deliveryTime: "25 min",
+        unit: "1 pack"
+      }
+    ];
+    
+    // Trending products with LOCAL images
+    const trending = [
+      {
+        id: 9,
+        name: "Avocado",
+        price: 80,
+        rating: 4.9,
+        category: "Fruits",
+        image: avocado,
+        rank: 1,
+        orders: 450,
+        ratingCount: 180
+      },
+      {
+        id: 10,
+        name: "Greek Yogurt",
+        price: 120,
+        rating: 4.7,
+        category: "Dairy",
+        image: greekYogurt,
+        rank: 2,
+        orders: 380,
+        ratingCount: 150
+      },
+      {
+        id: 11,
+        name: "Salmon Fillet",
+        price: 350,
+        rating: 4.8,
+        category: "Fish",
+        image: freshSalmon,
+        rank: 3,
+        orders: 320,
+        ratingCount: 120
+      },
+      {
+        id: 12,
+        name: "Orange Juice",
+        price: 85,
+        rating: 4.5,
+        category: "Beverages",
+        image: orangeJuice,
+        rank: 4,
+        orders: 290,
+        ratingCount: 95
+      },
+      {
+        id: 13,
+        name: "Chocolate Cookies",
+        price: 55,
+        rating: 4.6,
+        category: "Snacks",
+        image: chocolateCookies,
+        rank: 5,
+        orders: 420,
+        ratingCount: 160
+      },
+      {
+        id: 14,
+        name: "Bananas",
+        price: 35,
+        rating: 4.4,
+        category: "Fruits",
+        image: bananas,
+        rank: 6,
+        orders: 510,
+        ratingCount: 200
+      },
+      {
+        id: 15,
+        name: "Pasta",
+        price: 65,
+        rating: 4.3,
+        category: "Grains",
+        image: pasta,
+        rank: 7,
+        orders: 270,
+        ratingCount: 85
+      },
+      {
+        id: 16,
+        name: "Cheese Block",
+        price: 180,
+        rating: 4.7,
+        category: "Dairy",
+        image: cheeseBlock,
+        rank: 8,
+        orders: 340,
+        ratingCount: 130
+      }
+    ];
+
+    // Special offers data
+    const offers = [
+      {
+        id: 1,
+        title: "Weekend Special",
+        description: "Get 30% off on all fresh fruits",
+        discount: "30% OFF",
+        code: "FRUIT30",
+        color: "linear-gradient(135deg, #28a745, #20c997)",
+        icon: FaGift,
+        expiry: "2 days left"
+      },
+      {
+        id: 2,
+        title: "First Order Bonus",
+        description: "Flat ₹100 off on first purchase",
+        discount: "₹100 OFF",
+        code: "WELCOME100",
+        color: "linear-gradient(135deg, #007bff, #6f42c1)",
+        icon: FaCrown,
+        expiry: "New users only"
+      },
+      {
+        id: 3,
+        title: "Free Delivery",
+        description: "Free delivery on orders above ₹199",
+        discount: "FREE DELIVERY",
+        code: "FREESHIP",
+        color: "linear-gradient(135deg, #fd7e14, #e83e8c)",
+        icon: FaTruck,
+        expiry: "Limited time"
+      },
+      {
+        id: 4,
+        title: "Snack Time",
+        description: "Buy 2 get 1 free on all snacks",
+        discount: "B2G1 FREE",
+        code: "SNACKTIME",
+        color: "linear-gradient(135deg, #6f42c1, #e83e8c)",
+        icon: FaBolt,
+        expiry: "1 week left"
+      }
+    ];
+
+    setFeaturedProducts(enhancedFeatured);
+    setTrendingProducts(trending);
+    setSpecialOffers(offers);
+  }, []);
+
   const handleAddToCart = async (product) => {
     if (!isAuthenticated) {
-      // Redirect to login if not authenticated
       navigate('/login', { state: { from: { pathname: '/' } } });
       return;
     }
@@ -84,7 +356,6 @@ const GroceryHome = () => {
     try {
       const result = await addToCart(product, 1);
       if (result.success) {
-        // You can add a toast notification here
         console.log('Product added to cart successfully');
       } else {
         console.error('Failed to add to cart:', result.message);
@@ -103,12 +374,6 @@ const GroceryHome = () => {
         : [...prev, productId]
     );
   };
-
-  const featuredProducts = products.slice(0, 6);
-  const filteredProducts = featuredProducts.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const cartItemsCount = getTotalItems();
 
@@ -171,13 +436,14 @@ const GroceryHome = () => {
           transform: translateY(-10px);
           box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
+        
         .category-card img {
-        image-rendering: auto;
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
-        transition: transform 0.3s ease;
-      }
+          image-rendering: auto;
+          object-fit: cover;
+          width: 100%;
+          height: 100%;
+          transition: transform 0.3s ease;
+        }
         
         .product-card {
           transition: all 0.3s ease;
@@ -263,6 +529,69 @@ const GroceryHome = () => {
         .footer-dark {
           background: linear-gradient(135deg, #b6c0ebff 10%, #95d2d4ff 50%);
         }
+
+        /* Enhanced styles */
+        .product-tag {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          z-index: 2;
+          font-size: 0.7rem;
+          font-weight: 600;
+          padding: 4px 10px;
+          border-radius: 10px;
+          color: white;
+        }
+
+        .trending-badge {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
+          color: white;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.8rem;
+          font-weight: bold;
+        }
+
+        .offer-card {
+          border: none;
+          border-radius: 15px;
+          overflow: hidden;
+          transition: all 0.3s ease;
+          height: 100%;
+        }
+
+        .offer-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-image-container {
+          height: 200px;
+          overflow: hidden;
+          position: relative;
+          background: #f8f9fa;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .product-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+          transform: scale(1.05);
+        }
       `}</style>
 
       {/* Enhanced Top Bar */}
@@ -272,7 +601,7 @@ const GroceryHome = () => {
             <Col md={6}>
               <div className="d-flex align-items-center">
                 <FaPhone className="me-2" />
-                <span className="me-3">+91 7010799366</span>
+                <span className="me-3">+91 7092980042</span>
                 <FaEnvelope className="me-2" />
                 <span>Freshmart@gmail.com</span>
               </div>
@@ -296,10 +625,6 @@ const GroceryHome = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
-      
-      <Marquee speed={60} gradient={false} pauseOnHover={true}>
-        Welcome to FreshMart - your one-stop online destination for fresh fruits, vegetables, groceries, dairy products, personal care, and household essentials. Shop from the comfort of your home and enjoy same-day delivery, unbeatable prices, and farm-fresh quality. Experience hassle-free shopping, 24/7 customer support, and secure payments at FreshMart. Eat fresh, live healthy – only at FreshMart!
-      </Marquee>
 
       {/* Hero Carousel */}
       <Carousel fade className="mb-5">
@@ -408,69 +733,76 @@ const GroceryHome = () => {
       </section>
 
       {/* Enhanced Featured Products */}
-      <section className="py-1 bg-light">
+      <section className="py-2  ">
         <Container>
-          <div className="d-flex justify-content-between align-items-center mb-1">
+          <div className="d-flex justify-content-between align-items-center mb-2">
             <div>
-              <h6 className="display-5 fw-bold mb-2">⭐ Featured Products</h6>
+              <h2 className="display-6 fw-bold mb-2">⭐ Featured Products</h2>
               <p className="text-muted">Handpicked fresh items just for you</p>
             </div>
-           <Link to='/shop'><Button variant="success" size="10px" className="rounded-pill">
+           <Link to='/shop'><Button variant="success"  className="rounded-pill">
               View All <FaArrowRight className="ms-2" />
             </Button></Link>
           </div>
           <Row className="g-4">
-            {filteredProducts.map((product, index) => (
-              <Col key={product.id} xs={6} md={4} lg={3} className="mb-2">
+            {featuredProducts.map((product, index) => (
+              <Col key={product.id} xs={6} md={4} lg={3} className="mb-4">
                 <Card className="product-card h-100 border-0 shadow-sm">
-                  <div className="position-absolute end-0 top-0 p-3 z-3">
-                    <Button 
-                      variant="link" 
-                      className="p-0 rounded-circle bg-white shadow-sm" 
-                      style={{ width: '40px', height: '40px' }}
-                      onClick={() => toggleWishlist(product.id)}
-                      aria-label={wishlist.includes(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
-                    >
-                      <FaHeart 
-                        size={18} 
-                        color={wishlist.includes(product.id) ? '#dc3545' : '#6c757d'} 
+                  <div className="position-relative">
+                    {/* Product Tag */}
+                    
+                    
+                    <div className="position-absolute end-0 top-0 p-3 z-3">
+                      <Button 
+                        variant="link" 
+                        className="p-0 rounded-circle bg-white shadow-sm" 
+                        style={{ width: '40px', height: '40px' }}
+                        onClick={() => toggleWishlist(product.id)}
+                        aria-label={wishlist.includes(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
+                      >
+                        <FaHeart 
+                          size={18} 
+                          color={wishlist.includes(product.id) ? '#dc3545' : '#6c757d'} 
+                        />
+                      </Button>
+                    </div>
+                    
+                    {product.oldPrice && (
+                      <Badge bg="danger" className="position-absolute start-0 top-0 m-2 z-3">
+                        {Math.round((1 - product.price/product.oldPrice) * 100)}% OFF
+                      </Badge>
+                    )}
+                    
+                    <div className="product-image-container">
+                      <img 
+                        src={product.image} 
+                        alt={product.name}
+                        className="product-image"
+                        onError={(e) => {
+                          e.target.src = placeholder;
+                        }}
                       />
-                    </Button>
+                    </div>
                   </div>
-                  {product.oldPrice && (
-                    <Badge bg="danger" className="position-absolute start-0 top-0 m-2 z-3">
-                      {Math.round((1 - product.price/product.oldPrice) * 100)}% OFF
-                    </Badge>
-                  )}
-                  <div style={{ height: '200px', overflow: 'hidden' }}>
-                    <Card.Img 
-                      variant="top" 
-                      src={product.image || '/images/placeholder-product.jpg'} 
-                      alt={product.name}
-                      style={{ 
-                        objectFit: 'cover', 
-                        height: '100%', 
-                        width: '100%',
-                        transition: 'transform 0.3s ease'
-                      }}
-                      className="hover-scale"
-                      onError={(e) => {
-                        e.target.src = '/images/placeholder-product.jpg';
-                      }}
-                    />
-                  </div>
+                  
                   <Card.Body className="p-3">
-                    <span className="text-success small fw-bold">{product.category}</span>
+                    <div className="d-flex justify-content-between align-items-start mb-2">
+                      <span className="text-success small fw-bold">{product.category}</span>
+                      <small className="text-muted">{product.unit}</small>
+                    </div>
+                    
                     <Card.Title className="fs-6 fw-bold mb-2">{product.name}</Card.Title>
+                    
                     <div className="d-flex align-items-center mb-3">
                       <div className="d-flex text-warning me-2">
                         {[...Array(5)].map((_, i) => (
                           <FaStar key={i} size={12} className={i < Math.floor(product.rating) ? '' : 'text-muted'} />
                         ))}
                       </div>
-                      <span className="small text-muted">({Math.floor(product.rating * 20)})</span>
+                      <span className="small text-muted">({product.rating})</span>
                     </div>
-                    <div className="d-flex justify-content-between align-items-center">
+                    
+                    <div className="d-flex justify-content-between align-items-center mb-3">
                       <div>
                         <span className="fw-bold fs-5 text-success">₹{product.price}</span>
                         {product.oldPrice && (
@@ -479,17 +811,22 @@ const GroceryHome = () => {
                           </span>
                         )}
                       </div>
-                      <Button 
-                        variant="success" 
-                        size="sm"
-                        className="rounded-pill"
-                        onClick={() => handleAddToCart(product)}
-                        disabled={!isAuthenticated}
-                      >
-                        <FaShoppingCart className="me-1" />
-                        {isAuthenticated ? 'Add' : 'Login'}
-                      </Button>
+                      <small className="text-info">
+                        <FaClock className="me-1" />
+                        {product.deliveryTime}
+                      </small>
                     </div>
+                    
+                    <Button 
+                      variant="success" 
+                      size="sm"
+                      className="w-100 rounded-pill"
+                      onClick={() => handleAddToCart(product)}
+                      disabled={!isAuthenticated}
+                    >
+                      <FaShoppingCart className="me-1" />
+                      {isAuthenticated ? 'Add to Cart' : 'Login to Buy'}
+                    </Button>
                   </Card.Body>
                 </Card>
               </Col>
@@ -498,92 +835,72 @@ const GroceryHome = () => {
         </Container>
       </section>
 
-      {/* Enhanced Deal of the Day */}
-      <section className="py-5 gradient-bg">
+      {/* New Trending Products Section */}
+      <section className="py-5">
         <Container>
-          <div className="text-center mb-5">
-            <div className="deals-timer d-inline-block mb-3">
-              <FaFire className="me-2" />
-              Deal Ends in: 23:59:59
+          <div className="d-flex justify-content-between align-items-center mb-5">
+            <div>
+               <h2 className="display-6 fw-bold mb-2">Trending Now</h2>
+            <p className="lead text-muted">Products everyone is loving right now</p>
             </div>
-            <h2 className="display-5 fw-bold text-white">🔥 Deal of the Day</h2>
-            <p className="lead text-white">Limited time offers you can't miss!</p>
+           <Link to='/shop'><Button variant="success"  className="rounded-pill">
+              View All <FaArrowRight className="ms-2" />
+            </Button></Link>
           </div>
           <Row className="g-4">
-            {deals.map(deal => (
-              <Col key={deal.id} md={6} className="mb-4">
-                <Card className="floating-card h-100 border-0 shadow-lg">
-                  <Row className="g-0 h-100">
-                    <Col md={5}>
-                      <div style={{ height: '300px', overflow: 'hidden' }}>
-                        <img 
-                          src={deal.image || '/images/placeholder-product.jpg'} 
-                          alt={deal.name}
-                          style={{ 
-                            objectFit: 'cover', 
-                            height: '100%', 
-                            width: '100%',
-                            transition: 'transform 0.3s ease'
-                          }}
-                          onError={(e) => {
-                            e.target.src = '/images/placeholder-product.jpg';
-                          }}
-                        />
+            {trendingProducts.map((product) => (
+              <Col key={product.id} xs={6} md={4} lg={3} className="mb-4">
+                <Card className="product-card h-100 border-0 shadow-sm position-relative">
+                  {/* Trending Badge */}
+                  <div className="trending-badge">
+                    #{product.rank}
+                  </div>
+                  
+                  <div className="product-image-container">
+                    <img 
+                      src={product.image} 
+                      alt={product.name}
+                      className="product-image"
+                      onError={(e) => {
+                        e.target.src = placeholder;
+                      }}
+                    />
+                  </div>
+                  
+                  <Card.Body className="p-3">
+                    <Card.Title className="fs-6 fw-bold mb-2">{product.name}</Card.Title>
+                    
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                      <span className="fw-bold text-success">₹{product.price}</span>
+                      <span className="views-count small">
+                        <FaEye className="me-1" />
+                        {product.orders}+ orders
+                      </span>
+                    </div>
+                    
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <div className="d-flex align-items-center">
+                        <div className="d-flex text-warning me-1">
+                          <FaStar size={12} />
+                        </div>
+                        <small className="text-muted">({product.ratingCount})</small>
                       </div>
-                    </Col>
-                    <Col md={7}>
-                      <Card.Body className="h-100 d-flex flex-column p-4">
-                        <div className="mb-3">
-                          <Badge bg="danger" className="fs-6 px-3 py-2">
-                            {deal.discount}
-                          </Badge>
-                        </div>
-                        <Card.Title className="fw-bold mb-3">{deal.name}</Card.Title>
-                        <div className="d-flex align-items-center mb-3">
-                          <div className="d-flex text-warning me-2">
-                            {[...Array(5)].map((_, i) => (
-                              <FaStar key={i} className={i < Math.floor(deal.rating) ? '' : 'text-muted'} />
-                            ))}
-                          </div>
-                          <span className="small text-muted">({deal.rating})</span>
-                        </div>
-                        <div className="mt-auto">
-                          <div className="d-flex align-items-center mb-3">
-                            <span className="fw-bold display-6 text-success">₹{deal.price}</span>
-                            {deal.oldPrice && (
-                              <span className="text-decoration-line-through text-muted ms-3 fs-4">
-                                ₹{deal.oldPrice}
-                              </span>
-                            )}
-                          </div>
-                          <div className="progress mb-3" style={{ height: '12px' }}>
-                            <div 
-                              className="progress-bar bg-gradient progress-bar-striped progress-bar-animated" 
-                              role="progressbar" 
-                              style={{ width: '65%' }}
-                              aria-valuenow="65" 
-                              aria-valuemin="0" 
-                              aria-valuemax="100"
-                            ></div>
-                          </div>
-                          <div className="d-flex justify-content-between align-items-center mb-3">
-                            <small className="text-muted">⚡ Only 12 left in stock!</small>
-                            <small className="text-success fw-bold">65% claimed</small>
-                          </div>
-                          <Button 
-                            variant="success" 
-                            className="w-100 pulse-button"
-                            size="lg"
-                            onClick={() => handleAddToCart(deal)}
-                            disabled={!isAuthenticated}
-                          >
-                            <FaShoppingCart className="me-2" />
-                            {isAuthenticated ? 'Grab Deal Now!' : 'Login to Buy'}
-                          </Button>
-                        </div>
-                      </Card.Body>
-                    </Col>
-                  </Row>
+                      <small className="text-success fw-semibold">
+                        {product.category}
+                      </small>
+                    </div>
+                    
+                    <Button 
+                      variant="outline-success" 
+                      size="sm"
+                      className="w-100 rounded-pill"
+                      onClick={() => handleAddToCart(product)}
+                      disabled={!isAuthenticated}
+                    >
+                      <FaShoppingCart className="me-1" />
+                      {isAuthenticated ? 'Add to Cart' : 'Login to Buy'}
+                    </Button>
+                  </Card.Body>
                 </Card>
               </Col>
             ))}
@@ -591,8 +908,58 @@ const GroceryHome = () => {
         </Container>
       </section>
 
+      {/* Special Offers Section */}
+      <section className="py-5 ">
+        <Container>
+          <div className="d-flex justify-content-between align-items-center mb-5">
+            <div>
+              <h2 className="display-6 fw-bold ">🎁 Special Offers</h2>
+            <p className="lead text-muted">Don't miss these exclusive deals and discounts</p>
+           </div>
+          </div>
+          
+          
+          <Row className="g-4">
+            {specialOffers.map((offer) => {
+              const IconComponent = offer.icon;
+              return (
+                <Col key={offer.id} xs={12} sm={6} lg={3} className="mb-4">
+                  <Card 
+                    className="offer-card shadow border-0 text-white position-relative"
+                    style={{ background: offer.color, minHeight: '200px' }}
+                  >
+                    <Card.Body className="p-4 d-flex flex-column justify-content-between">
+                      <div>
+                        <div className="d-flex justify-content-between align-items-start mb-3">
+                          <IconComponent size={32} />
+                          <Badge bg="light" text="dark" className="fs-6 px-3">
+                            {offer.discount}
+                          </Badge>
+                        </div>
+                        <Card.Title className="h5 fw-bold mb-2">{offer.title}</Card.Title>
+                        <Card.Text className="mb-3 small opacity-90">
+                          {offer.description}
+                        </Card.Text>
+                      </div>
+                      <div>
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                          <code className="bg-dark bg-opacity-50 px-3 py-2 rounded text-white small">
+                            {offer.code}
+                          </code>
+                          <small className="opacity-90">{offer.expiry}</small>
+                        </div>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              );
+            })}
+          </Row>
+        </Container>
+      </section>
+
       {/* Enhanced Why Choose Us */}
-      <section className="py-5">
+      <section className="py-1">
         <Container>
           <div className="text-center mb-5">
             <h2 className="display-5 fw-bold mb-3">🌟 Why Choose FreshMart</h2>
@@ -631,38 +998,9 @@ const GroceryHome = () => {
         </Container>
       </section>
 
-      {/* Enhanced Newsletter */}
-      <section className="newsletter-section py-4">
-        <Container className="text-center">
-          <Row className="justify-content-center">
-            <Col lg={8}>
-              <h2 className="display-5 fw-bold text-black mb-3">📬 Stay Updated with Fresh Deals!</h2>
-              <p className="lead text-black mb-3">
-                Subscribe to our newsletter and get 15% off your first order plus exclusive offers
-              </p>
-              <Form className="d-flex">
-                <Form.Control
-                  type="email"
-                  placeholder="Your email address"
-                  className="rounded-pill-start py-2 px-4 border-0"
-                  aria-label="Email for newsletter subscription"
-                />
-                <Button 
-                  variant="success" 
-                  className="rounded-pill-end px-4 py-1 pulse-button"
-                >
-                  Subscribe <FaArrowRight className="ms-2" />
-                </Button>
-              </Form>
-              <p className="text-black-50 mt-3 small">
-                We respect your privacy. Unsubscribe at any time.
-              </p>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-
+        <EnhancedNewsletter />
       {/* Enhanced Footer */}
+
       <footer className="footer-dark text-black py-5">
         <Container>
           <Row>
@@ -672,17 +1010,46 @@ const GroceryHome = () => {
                 Your one-stop shop for fresh, organic groceries delivered fast to your doorstep. 
                 Quality you can trust, service you'll love.
               </p>
-              <div className="d-flex gap-3 mt-4" >
-                <Button variant="outline-light" size="sm" className="rounded-circle">
-                  <FaFacebook />
-                </Button>
-                <Button variant="outline-light" size="sm" className="rounded-circle">
-                  <FaTwitter />
-                </Button>
-                <Button variant="outline-light" size="sm" className="rounded-circle">
-                  <FaInstagram />
-                </Button>
-              </div>
+              <div className="d-flex gap-3 mt-4">
+  {/* Facebook */}
+  <Button
+    variant="outline-light"
+    size="sm"
+    className="rounded-circle"
+    as="a"
+    href="https://www.facebook.com/share/1DQ1KvjTpy/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <FaFacebook />
+  </Button>
+
+  {/* Instagram */}
+  <Button
+    variant="outline-light"
+    size="sm"
+    className="rounded-circle"
+    as="a"
+    href="https://www.instagram.com/_vishva_07_._?igsh=YzZrbzdhdXZleTg3"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <FaInstagram />
+  </Button>
+
+  <Button
+    variant="outline-light"
+    size="sm"
+    className="rounded-circle"
+    as="a"
+    href="https://x.com/TVishva3006"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <FaTwitter /> 
+  </Button>
+</div>
+
             </Col>
             <Col md={4} lg={2} className="mb-4">
               <h5 className="fw-bold mb-4">Quick Links</h5>
@@ -714,11 +1081,13 @@ const GroceryHome = () => {
               <ul className="list-unstyled text-black-100">
                 <li className="mb-3 d-flex align-items-start">
                   <FaMapMarkerAlt className="me-2 mt-1" />
-                  <span>123 Fresh Street, chennai City, chennai 632001</span>
+                  <span>123 Fresh Street, Chennai City, Chennai 632001</span>
                 </li>
                 <li className="mb-3 d-flex align-items-center">
                   <FaPhone className="me-2" />
-                  <span>+91 7092980042</span>
+                    <a href="tel:+917092980042">
+                     +91 70929 80042
+                    </a>
                 </li>
                 <li className="mb-3 d-flex align-items-center">
                   <FaEnvelope className="me-2" />
@@ -727,7 +1096,7 @@ const GroceryHome = () => {
               </ul>
             </Col>
           </Row>
-          <hr className="my-4" />
+          <hr className="my-1" />
           <Row className="align-items-center">
             <Col md={6} className="mb-3 mb-md-0">
               <p className="mb-0 small">&copy; {new Date().getFullYear()} FreshMart. All rights reserved.</p>
