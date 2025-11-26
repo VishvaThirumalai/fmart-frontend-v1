@@ -236,7 +236,23 @@ const CategoryPage = () => {
       <div className="category-page">
 
         {/* Fixed View Toggle - Top Right */}
-        <div className="view-toggle-top d-none d-lg-flex">
+        
+        {/* Simple Hero Header */}
+        <div className="hero-header ">
+          <Container className="hero-content">
+            <Row className="align-items-center">
+              <Col xs="auto">
+                <span className="simple-hero-count">
+                  {sortedProducts.length} products
+                </span>
+              </Col>
+              <Col xs="auto">
+                <h1 className="simple-hero-title">
+                  {displayCategoryName}
+                </h1>
+              </Col>
+              
+              <Col><div className="view-toggle-top d-none d-lg-flex ">
           <button
             className={`view-toggle-btn-top ${viewMode === 'grid' ? 'active' : ''}`}
             onClick={() => setViewMode('grid')}
@@ -251,25 +267,11 @@ const CategoryPage = () => {
           >
             <FaList />
           </button>
-        </div>
-
-        {/* Simple Hero Header */}
-        <div className="hero-header">
-          <Container className="hero-content">
-            <Row className="align-items-center">
-              <Col>
-                <h1 className="simple-hero-title">
-                  {displayCategoryName}
-                </h1>
-              </Col>
-              <Col xs="auto">
-                <span className="simple-hero-count">
-                  {sortedProducts.length} products
-                </span>
-              </Col>
+        </div></Col>
             </Row>
           </Container>
         </div>
+     
 
         {/* Fixed Sidebar - Left */}
         <div className="fixed-sidebar d-none d-lg-block">
